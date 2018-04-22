@@ -1,0 +1,116 @@
+﻿// https://stackoverflow.com/questions/38467753/realproxy-in-dotnet-core?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa
+
+using System;
+using System.Diagnostics;
+using System.Reflection;
+using System.Threading.Tasks;
+
+// TODO: Task support
+
+namespace Bnaya.Samples
+{
+    public class DynamicProxyFactory<T> : DispatchProxy
+    {
+        private string _decoratedClassName;
+        private T _decorated;
+        private Action<(string ClassName, string ContractName, string MethodName)> _before;
+        private Action<(string ClassName, string ContractName, string MethodName, TimeSpan Duration)> _after;
+        private Action<(string ClassName, string ContractName, string MethodName, Exception Error)> _error;
+
+        #region Create
+
+        /// <summary>
+        /// Creates the specified decorated (served by the base class).
+        /// </summary>
+        /// <param name="decorated">The decorated instance.</param>
+        /// <param name="before">The before.</param>
+        /// <param name="after">The after.</param>
+        /// <param name="error">The error.</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException">decorated</exception>
+        public static T Create(
+            T decorated,
+            Action<(string ImplementationName, string ContractName, string MethodName)> before,
+            Action<(string ImplementationName, string ContractName, string MethodName, TimeSpan Duration)> after,
+            Action<(string ImplementationName, string ContractName, string MethodName, Exception Error)> error)
+        {
+            #region Validation
+
+            if (decorated == null)
+            {
+                throw new ArgumentNullException(nameof(decorated));
+            }
+
+            #endregion // Validation
+
+            object proxy = Create<T, DynamicProxyFactory<T>>();
+            var instance = (DynamicProxyFactory<T>)proxy;
+            instance._decorated = decorated;
+            instance._decoratedClassName = decorated.GetType().Name;
+            instance._before = before;
+            instance._after = after;
+            instance._error = error;
+
+            return (T)proxy;
+        }
+
+        #endregion // Create
+
+        #region Invoke [override]
+
+        /// <summary>
+        /// Override the invocation (do the AOP)
+        /// </summary>
+        /// <param name="targetMethod"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        protected override object Invoke(MethodInfo targetMethod, object[] args)
+        {
+            Type reflected = targetMethod.ReflectedType;
+            var sw = Stopwatch.StartNew();
+            try
+            {
+
+                _before?.Invoke((_decoratedClassName, reflected.Name, targetMethod.Name));
+                object result;
+                if (targetMethod.IsStatic)
+                    result = targetMethod.Invoke(null, args);
+                else
+                    result = targetMethod.Invoke(_decorated, args);
+
+                if (result is Task t)
+                {
+                    Task _ = InvokeAsync(t);
+                }
+                else
+                {
+                    sw.Stop();
+                    _after((_decoratedClassName, reflected.Name, targetMethod.Name, sw.Elapsed));
+                }
+                return result;
+            }
+            catch (Exception ex) when (ex is TargetInvocationException)
+            {
+                _error((_decoratedClassName, reflected.Name, targetMethod.Name, ex));
+                throw ex.InnerException ?? ex;
+            }
+
+            async Task InvokeAsync(Task t)
+            {
+                try
+                {
+                    await t;
+                    sw.Stop();
+                    _after((_decoratedClassName, reflected.Name, targetMethod.Name, sw.Elapsed));
+                }
+                catch (Exception ex) when (ex is TargetInvocationException)
+                {
+                    _error((_decoratedClassName, reflected.Name, targetMethod.Name, ex));
+                }
+            }
+        }
+
+
+        #endregion // Invoke [override]
+    }
+}
