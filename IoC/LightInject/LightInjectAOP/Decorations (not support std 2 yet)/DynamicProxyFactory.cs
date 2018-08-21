@@ -16,6 +16,7 @@ namespace Bnaya.Samples
         private Action<(string ClassName, string ContractName, string MethodName)> _before;
         private Action<(string ClassName, string ContractName, string MethodName, TimeSpan Duration)> _after;
         private Action<(string ClassName, string ContractName, string MethodName, Exception Error)> _error;
+        private readonly string _name;
 
         #region Create
 
@@ -57,6 +58,15 @@ namespace Bnaya.Samples
 
         #endregion // Create
 
+        #region Ctor
+
+        public DynamicProxyFactory()
+        {
+            _name = this.GetType().Name;
+        }
+
+        #endregion // Ctor
+
         #region Invoke [override]
 
         /// <summary>
@@ -69,12 +79,11 @@ namespace Bnaya.Samples
             MethodInfo targetMethod,
             object[] args)
         {
-            Type reflected = targetMethod.ReflectedType;
             var sw = Stopwatch.StartNew();
             try
             {
 
-                _before?.Invoke((_decoratedClassName, reflected.Name, targetMethod.Name));
+                _before?.Invoke((_decoratedClassName, _name, targetMethod.Name));
                 object result;
                 if (targetMethod.IsStatic)
                     result = targetMethod.Invoke(null, args);
@@ -88,13 +97,13 @@ namespace Bnaya.Samples
                 else
                 {
                     sw.Stop();
-                    _after((_decoratedClassName, reflected.Name, targetMethod.Name, sw.Elapsed));
+                    _after((_decoratedClassName, _name, targetMethod.Name, sw.Elapsed));
                 }
                 return result;
             }
             catch (Exception ex) when (ex is TargetInvocationException)
             {
-                _error((_decoratedClassName, reflected.Name, targetMethod.Name, ex));
+                _error((_decoratedClassName, _name, targetMethod.Name, ex));
                 throw ex.InnerException ?? ex;
             }
 
@@ -104,11 +113,11 @@ namespace Bnaya.Samples
                 {
                     await t;
                     sw.Stop();
-                    _after((_decoratedClassName, reflected.Name, targetMethod.Name, sw.Elapsed));
+                    _after((_decoratedClassName, _name, targetMethod.Name, sw.Elapsed));
                 }
                 catch (Exception ex) when (ex is TargetInvocationException)
                 {
-                    _error((_decoratedClassName, reflected.Name, targetMethod.Name, ex));
+                    _error((_decoratedClassName, _name, targetMethod.Name, ex));
                 }
             }
         }

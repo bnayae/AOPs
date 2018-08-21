@@ -22,7 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{80964FC7
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AopTests", "Tests\AopTests\AopTests.csproj", "{25870B0E-DDB1-4AE7-B380-47CC45EB6DE3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IoCLightInjectAOP", "Common\IoCContracts\IoCLightInjectAOP.csproj", "{6627EF26-C66D-4CAA-8651-4F382972143E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IoCContracts", "Common\IoCContracts\IoCContracts.csproj", "{6627EF26-C66D-4CAA-8651-4F382972143E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IoCImplementations", "Common\IoCImplementations\IoCImplementations.csproj", "{F66A1025-3ABD-4C17-922A-E13A9BB93FB5}"
 EndProject
@@ -31,6 +31,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LightInject", "LightInject", "{8EDA1B39-B9C4-4EBE-8CD0-97A20A84FD8D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LightInjectAOP", "IoC\LightInject\LightInjectAOP\LightInjectAOP.csproj", "{6084F530-912E-460A-9093-9B2EA7379535}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StressCheck", "Tests\StressCheck\StressCheck.csproj", "{6DF7A003-0E30-4D1A-AE04-36A3AE90D63A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -66,6 +68,10 @@ Global
 		{6084F530-912E-460A-9093-9B2EA7379535}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6084F530-912E-460A-9093-9B2EA7379535}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6084F530-912E-460A-9093-9B2EA7379535}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DF7A003-0E30-4D1A-AE04-36A3AE90D63A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DF7A003-0E30-4D1A-AE04-36A3AE90D63A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DF7A003-0E30-4D1A-AE04-36A3AE90D63A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DF7A003-0E30-4D1A-AE04-36A3AE90D63A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,6 +87,7 @@ Global
 		{B715EDC5-5C73-46EA-A987-DD5C00C08999} = {4E8DB142-C93E-4B40-9155-A35D7BD49C53}
 		{8EDA1B39-B9C4-4EBE-8CD0-97A20A84FD8D} = {E339DA24-2005-4882-935F-8456F2032A7A}
 		{6084F530-912E-460A-9093-9B2EA7379535} = {8EDA1B39-B9C4-4EBE-8CD0-97A20A84FD8D}
+		{6DF7A003-0E30-4D1A-AE04-36A3AE90D63A} = {80964FC7-7F0A-4744-AD48-A3B5425DA83D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1CD1A52C-1934-4AFF-B5CE-000B457AF4CB}

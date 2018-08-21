@@ -66,9 +66,9 @@
       <Project>{b715edc5-5c73-46ea-a987-dd5c00c08999}</Project>
       <Name>DynamicAOP</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Common\IoCContracts\IoCLightInjectAOP.csproj">
+    <ProjectReference Include="..\..\Common\IoCContracts\IoCContracts.csproj">
       <Project>{6627ef26-c66d-4caa-8651-4f382972143e}</Project>
-      <Name>IoCLightInjectAOP</Name>
+      <Name>IoCContracts</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Common\IoCImplementations\IoCImplementations.csproj">
       <Project>{f66a1025-3abd-4c17-922a-e13a9bb93fb5}</Project>

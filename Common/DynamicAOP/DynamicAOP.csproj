@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\IoCContracts\IoCLightInjectAOP.csproj" />
+    <ProjectReference Include="..\IoCContracts\IoCContracts.csproj" />
   </ItemGroup>
 
 </Project>

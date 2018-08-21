@@ -12,7 +12,12 @@ namespace Bnaya.Samples
     {
         static void Main(string[] args)
         {
-            
+            Simple();
+            Console.ReadKey();
+        }
+
+        private static void Simple()
+        {
             // 1. Create a new Simple Injector container
             var container = new ServiceContainer();
             //container = container.InterceptWith
@@ -28,7 +33,6 @@ namespace Bnaya.Samples
 
             ICalculator foo = container.GetInstance<ICalculator>();
             foo.Add(1, 2);
-            Console.ReadKey();
         }
     }
 }
