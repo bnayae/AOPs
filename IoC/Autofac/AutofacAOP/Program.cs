@@ -14,15 +14,15 @@ namespace Bnaya.Samples
                     .As<ILogger>()
                     .SingleInstance();
             KeyedToNon(builder);
-            NonToKeyed(builder);
-            try
-            {
-                NonToNon_Fail(builder);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.GetBaseException().Message);
-            }
+            //NonToKeyed(builder);
+            //try
+            //{
+            //    NonToNon_Fail(builder);
+            //}
+            //catch (Exception ex)
+            //{
+            //    Console.WriteLine(ex.GetBaseException().Message);
+            //}
             Console.ReadKey();
         }
 
@@ -32,7 +32,6 @@ namespace Bnaya.Samples
                     .Keyed<ICalculator>("A")
                     .SingleInstance();
             builder.RegisterDecorator<ICalculator>((inner) => new CalculatorDecorator(inner), "A");
-
             var container = builder.Build();
             ICalculator f = container.Resolve<ICalculator>();
             int i = f.Add(1, 2);

@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\DynamicAOP\DynamicAOP.csproj" />
-    <ProjectReference Include="..\..\..\Common\IoCContracts\IoCContracts.csproj" />
+    <ProjectReference Include="..\..\..\Common\IoCContracts\IoCLightInjectAOP.csproj" />
     <ProjectReference Include="..\..\..\Common\IoCImplementations\IoCImplementations.csproj" />
   </ItemGroup>
 
