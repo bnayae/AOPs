@@ -31,9 +31,9 @@ namespace Bnaya.Samples
         /// <exception cref="ArgumentNullException">decorated</exception>
         public static T Create(
             T decorated,
-            Action<(string ImplementationName, string ContractName, string MethodName)> before,
-            Action<(string ImplementationName, string ContractName, string MethodName, TimeSpan Duration)> after,
-            Action<(string ImplementationName, string ContractName, string MethodName, Exception Error)> error)
+            Action<(string ImplementationName, string ContractName, string MethodName)> before = null,
+            Action<(string ImplementationName, string ContractName, string MethodName, TimeSpan Duration)> after = null,
+            Action<(string ImplementationName, string ContractName, string MethodName, Exception Error)> error = null)
         {
             #region Validation
 
@@ -97,13 +97,13 @@ namespace Bnaya.Samples
                 else
                 {
                     sw.Stop();
-                    _after((_decoratedClassName, _name, targetMethod.Name, sw.Elapsed));
+                    _after?.Invoke((_decoratedClassName, _name, targetMethod.Name, sw.Elapsed));
                 }
                 return result;
             }
             catch (Exception ex) when (ex is TargetInvocationException)
             {
-                _error((_decoratedClassName, _name, targetMethod.Name, ex));
+                _error?.Invoke((_decoratedClassName, _name, targetMethod.Name, ex));
                 throw ex.InnerException ?? ex;
             }
 
@@ -113,16 +113,19 @@ namespace Bnaya.Samples
                 {
                     await t;
                     sw.Stop();
-                    _after((_decoratedClassName, _name, targetMethod.Name, sw.Elapsed));
+                    _after?.Invoke((_decoratedClassName, _name, targetMethod.Name, sw.Elapsed));
                 }
                 catch (Exception ex) when (ex is TargetInvocationException)
                 {
-                    _error((_decoratedClassName, _name, targetMethod.Name, ex));
+                    _error?.Invoke((_decoratedClassName, _name, targetMethod.Name, ex));
                 }
             }
         }
 
 
         #endregion // Invoke [override]
+
+        public override string ToString() => $"Decorate: {_decorated}";
     }
+
 }

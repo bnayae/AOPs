@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Bnaya.Samples
 {
@@ -15,6 +16,13 @@ namespace Bnaya.Samples
         public int Add(int a, int b)
         {
             _logger.Report("Add is actually running");
+            return a + b;
+        }
+
+        public async Task<int> AddAsync(int a, int b)
+        {
+            await Task.Delay(1050).ConfigureAwait(false);
+            _logger.Report("Add async is actually running");
             return a + b;
         }
 

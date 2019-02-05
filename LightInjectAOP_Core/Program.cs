@@ -1,12 +1,9 @@
-﻿using LightInject;
+﻿using Bnaya.Samples;
+using LightInject;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Bnaya.Samples
+namespace LightInjectAOP_Core
 {
     class Program
     {
@@ -42,5 +39,6 @@ namespace Bnaya.Samples
                 f.Add(2, 3);
             }
         }
+
     }
 }

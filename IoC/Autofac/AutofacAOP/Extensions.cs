@@ -22,7 +22,8 @@ namespace Bnaya.Samples
             {
                 var decorated = DynamicProxyFactory<TContract>.Create(instance,
                                             info => Console.WriteLine($"\tBEFORE: {info.ImplementationName} [{info.ContractName}: {info.MethodName}]"),
-                                            info => Console.WriteLine($"\tAFTER ({info.Duration:g}): {info.ImplementationName} [{info.ContractName}: {info.MethodName}]"),
+                                            info => Console.WriteLine($@"        AFTER ({info.Duration:g}): {info.ImplementationName} [{info.ContractName}: {info.MethodName}]
+-----------------------------------"),
                                             info => Console.WriteLine($"\tERROR: {info.ImplementationName} [{info.ContractName}: {info.MethodName}]\r\n{info.Error}"));
                 return decorated;
             };

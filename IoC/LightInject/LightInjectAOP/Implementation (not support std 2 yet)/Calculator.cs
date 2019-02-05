@@ -23,5 +23,7 @@ namespace Bnaya.Samples
             _logger.Report("Sub is actually running");
             return a - b;
         }
+
+        public override string ToString() => nameof(Calculator);
     }
 }

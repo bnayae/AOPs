@@ -1,19 +1,71 @@
 ﻿using Autofac;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 // https://nearsoft.com/blog/aspect-oriented-programming-aop-in-net-core-and-c-using-autofac-and-dynamicproxy/
 
 namespace Bnaya.Samples
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static readonly object _sync = new object();
+        private static readonly AsyncLock _lock = new AsyncLock(TimeSpan.FromSeconds(5));
+
+        private static async Task Main(string[] args)
         {
-            DecorateTest();
+            await RegAsyncTestAsync().ConfigureAwait(false);
+            await DecorateTestAsync().ConfigureAwait(false);
             Console.ReadKey();
         }
 
-        private static void DecorateTest()
+        private static async Task RegAsyncTestAsync()
+        {
+            const int RANGE = 1000;
+            var builder = new ContainerBuilder();
+            var tasks = Enumerable.Range(0, RANGE)
+                    .Select(i => Task.Run(async () =>
+                    {
+                        //lock (_sync)
+                        using(await _lock.AcquireAsync())
+                        {
+                            builder.RegisterType<ConsoleLogger>()
+                                            .Keyed<ILogger>(i)
+                                            .SingleInstance();
+                            builder.Register<IEnumerable<int>>(c =>
+                            {
+                                var v = c.Resolve<ILogger>();
+                                return Enumerable.Range(4, 5);
+                            });
+                        }
+                    }));
+
+            builder.RegisterType<ConsoleLogger>()
+                    .As<ILogger>()
+                    .SingleInstance();
+            await Task.WhenAll(tasks);
+            var container = builder.Build();
+            for (int i = 0; i < RANGE; i++)
+            {
+                if (container.IsRegisteredWithKey<ILogger>(i))
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write("V,");
+                    Console.ResetColor();
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    Console.Write("X,");
+                    Console.ResetColor();
+                }
+            }
+
+            Console.WriteLine();
+        }
+
+        private static async Task DecorateTestAsync()
         {
             var builder = new ContainerBuilder();
             builder.RegisterType<ConsoleLogger>()
@@ -49,7 +101,8 @@ namespace Bnaya.Samples
 
             Console.WriteLine(f.GetType().Name);
             Console.WriteLine(f);
-            int i = f.Add(1, 2);
+            int i = await f.AddAsync(1, 2);
+            i = f.Sub(17, 20);
 
             Console.WriteLine();
             ICalculator[] fs = container.Resolve<ICalculator[]>();
