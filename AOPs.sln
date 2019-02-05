@@ -10,9 +10,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AutofacAOP", "IoC\Autofac\AutofacAOP\AutofacAOP.csproj", "{11186A54-CBF4-4E72-8AF6-B19F4F3E16F3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SimpleInjector", "SimpleInjector", "{62E43865-98C9-4180-9BD3-0FB77FB14D64}"
-	ProjectSection(SolutionItems) = preProject
-		LightInjectorAOP\Program.cs = LightInjectorAOP\Program.cs
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleInjectorAOP", "IoC\SimpleInjector\SimpleInjectorAOP\SimpleInjectorAOP.csproj", "{793261AA-8044-4897-93BE-03A2BE6FA44F}"
 EndProject

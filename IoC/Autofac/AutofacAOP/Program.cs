@@ -9,64 +9,77 @@ namespace Bnaya.Samples
     {
         static void Main(string[] args)
         {
+            DecorateTest();
+            Console.ReadKey();
+        }
+
+        private static void DecorateTest()
+        {
             var builder = new ContainerBuilder();
             builder.RegisterType<ConsoleLogger>()
                     .As<ILogger>()
                     .SingleInstance();
-            KeyedToNon(builder);
-            //NonToKeyed(builder);
-            //try
-            //{
-            //    NonToNon_Fail(builder);
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine(ex.GetBaseException().Message);
-            //}
-            Console.ReadKey();
-        }
 
-        private static void KeyedToNon(ContainerBuilder builder)
-        {
+            #region Decorate
+
             builder.RegisterType<Calculator>()
-                    .Keyed<ICalculator>("A")
-                    .SingleInstance();
-            builder.RegisterDecorator<ICalculator>((inner) => new CalculatorDecorator(inner), "A");
+                    .Decorate<ICalculator>(builder);
+            builder.RegisterType<CalculatorX>()
+                    .Decorate<ICalculator>(builder)
+                    .Decorate(builder, "A");
+            builder.RegisterType<CalculatorY>()
+                    .Decorate<ICalculator>(builder, "A");
+
+            #endregion // Decorate
+
             var container = builder.Build();
+
+            #region Test
+
+            bool r = container.IsRegistered<ICalculator>();
+            bool ra = container.IsRegisteredWithKey<ICalculator>("A");
             ICalculator f = container.Resolve<ICalculator>();
+            ICalculator f1 = container.Resolve<ICalculator>();
+            if (f != f1)
+            {
+                Console.ForegroundColor = ConsoleColor.Magenta;
+                Console.WriteLine("NOT SINGLETOE !!!");
+                Console.ResetColor();
+            }
+
+            Console.WriteLine(f.GetType().Name);
+            Console.WriteLine(f);
             int i = f.Add(1, 2);
 
-            Console.WriteLine($"Done {i}");
+            Console.WriteLine();
+            ICalculator[] fs = container.Resolve<ICalculator[]>();
+            foreach (var item in fs)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"** {item} **");
+                Console.ResetColor();
+                item.Add(3, 4);
+            }
 
-            Console.ReadKey();
-        }
+            Console.WriteLine();
+            ICalculator fa = container.ResolveKeyed<ICalculator>("A");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("#######  A ######");
+            Console.ResetColor();
+            fa.Add(9, 8);
 
-        private static void NonToKeyed(ContainerBuilder builder)
-        {
-            builder.RegisterType<Calculator>()
-                    .As<ICalculator>() 
-                    .SingleInstance();
-            builder.RegisterDecorator<ICalculator>((inner) => new CalculatorDecorator(inner), null, "A");
 
-            var container = builder.Build();
-            ICalculator f = container.ResolveKeyed<ICalculator>("A");
-            int i = f.Add(1, 2);
+            Console.WriteLine();
+            ICalculator[] fsa = container.ResolveKeyed<ICalculator[]>("A");
+            foreach (var item in fsa)
+            {
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.WriteLine($"##### {item} ######");
+                Console.ResetColor();
+                item.Add(3, 1);
+            }
 
-            Console.WriteLine($"Done {i}");
-        }
-
-        private static void NonToNon_Fail(ContainerBuilder builder)
-        {
-            builder.RegisterType<Calculator>()
-                    .As<ICalculator>() // Not applicable for this kind of registration
-                    .SingleInstance();
-            builder.RegisterDecorator<ICalculator>((inner) => new CalculatorDecorator(inner), null);
-
-            var container = builder.Build();
-            ICalculator f = container.Resolve<ICalculator>();
-            int i = f.Add(1, 2);
-
-            Console.WriteLine($"Done {i}");
+            #endregion // Test
         }
     }
 }

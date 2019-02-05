@@ -124,5 +124,7 @@ namespace Bnaya.Samples
 
 
         #endregion // Invoke [override]
+
+        public override string ToString() => $"Decorate: {_decorated}";
     }
 }

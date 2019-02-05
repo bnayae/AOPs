@@ -4,10 +4,10 @@ using System.Text;
 
 namespace Bnaya.Samples
 {
-    public class Calculator : ICalculator
+    public class CalculatorY : ICalculator
     {
         private readonly ILogger _logger;
-        public Calculator(ILogger logger)
+        public CalculatorY(ILogger logger)
         {
             _logger = logger;
         }
