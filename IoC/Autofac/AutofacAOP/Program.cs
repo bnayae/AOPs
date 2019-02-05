@@ -25,7 +25,7 @@ namespace Bnaya.Samples
             builder.RegisterType<Calculator>()
                     .Decorate<ICalculator>(builder);
             builder.RegisterType<CalculatorX>()
-                    .Decorate<ICalculator>(builder)
+                    .Decorate<ICalculator>(builder) //, decoratorConfig: x => x.InstancePerDependency())
                     .Decorate(builder, "A");
             builder.RegisterType<CalculatorY>()
                     .Decorate<ICalculator>(builder, "A");
